@@ -1,5 +1,9 @@
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_introduction/app_state.dart';
 import 'package:firebase_introduction/src/widgets.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'src/authentication.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
@@ -19,6 +23,15 @@ class HomePage extends StatelessWidget {
           const IconAndDetail(
             icon: Icons.location_city_outlined,
             detail: 'São Paulo',
+          ),
+          Consumer<ApplicationState>(
+            builder:
+                (context, appState, _) => Authentication(
+                  loggedIn: appState.loggedIn,
+                  signOut: () {
+                    FirebaseAuth.instance.signOut();
+                  },
+                ),
           ),
           const Divider(
             height: 8,
