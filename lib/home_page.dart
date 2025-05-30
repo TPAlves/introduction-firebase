@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_introduction/app_state.dart';
+import 'package:firebase_introduction/guest_book.dart';
 import 'package:firebase_introduction/src/widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -40,11 +41,26 @@ class HomePage extends StatelessWidget {
             endIndent: 8,
             color: Colors.grey,
           ),
-          const Header(heading: 'Lorem Ipsum'),
+          const Header(heading: 'O que vai ser em?!'),
           const Paragraph(
-            content:
-                'Lorem ipsum dolor sit amet, consectetur adipiscing elit. '
-                'Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
+            content: 'Firebase hoje, Firebase amanhã, Firebase sempre!',
+          ),
+
+          Consumer<ApplicationState>(
+            builder:
+                (context, appState, _) => Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    if (appState.loggedIn) ...[
+                      const Header(heading: 'Discussão'),
+                      GuestBook(
+                        addMessage:
+                            (message) =>
+                                appState.addMessageToGuestBook(message),
+                      ),
+                    ],
+                  ],
+                ),
           ),
         ],
       ),

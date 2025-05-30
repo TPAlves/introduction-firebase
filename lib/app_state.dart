@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_introduction/firebase_options.dart';
@@ -25,5 +26,19 @@ class ApplicationState extends ChangeNotifier {
       user != null ? _loggedIn = true : _loggedIn = false;
       notifyListeners();
     });
+  }
+
+  Future<DocumentReference> addMessageToGuestBook(String message) {
+    if (!_loggedIn) {
+      throw Exception("Usuário não está logado.");
+    }
+    return FirebaseFirestore.instance
+        .collection('guestbook')
+        .add(<String, dynamic>{
+          'message': message,
+          'timestamp': DateTime.now().millisecondsSinceEpoch,
+          'name': FirebaseAuth.instance.currentUser!.displayName,
+          'userId': FirebaseAuth.instance.currentUser!.uid,
+        });
   }
 }
